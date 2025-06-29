@@ -1,26 +1,32 @@
 import unittest
 import numpy as np
 from sklearn.metrics import accuracy_score
-from joblib import load
+
 
 class TestIrisModel(unittest.TestCase):
+    self.model = None
+    self.model_path = 'model.joblib'
+    self.X = None
+    self.y = None
+    self.sample_path = "samples"
+    
     def setUp(self):
-        # Load the trained model
-        cls.model = load('model.joblib')
-        # Load the Iris dataset
-        iris = load_iris()
-        cls.X = iris.data
-        cls.y = iris.target
+        from joblib import load
+        import pandas as pd
+        self.model = load(self.model_path)
+        data = pd.read_csv(sample_path + "/sample.csv")
+        self.X = data.iloc[:,:4]
+        self.y = data.iloc[:,4]
 
     # --- Data Validation Tests ---
     def test_feature_shape(self):
-        """Check that the feature matrix has correct shape (150, 4)."""
-        self.assertEqual(self.X.shape, (150, 4), "Feature matrix shape mismatch.")
+        """Check that the feature matrix has correct number of features."""
+        self.assertEqual(self.X.shape[1],  4, "Feature matrix shape mismatch.")
 
     def test_label_values(self):
-        """Check that all labels are within expected range (0, 1, 2)."""
+        """Check that all labels are among expected values."""
         unique_labels = np.unique(self.y)
-        self.assertTrue(np.all(np.isin(unique_labels, [0, 1, 2])), "Unexpected label values.")
+        self.assertTrue(np.all(np.isin(unique_labels, ['setosa', 'versicolor', 'virginica'])), "Unexpected label values.")
 
     # --- Model Evaluation Tests ---
     def test_model_accuracy(self):
@@ -33,7 +39,7 @@ class TestIrisModel(unittest.TestCase):
         """Test that the model predicts a known class for a sample."""
         sample = self.X[0].reshape(1, -1)
         pred = self.model.predict(sample)[0]
-        self.assertIn(pred, [0, 1, 2], "Prediction not in expected classes.")
+        self.assertIn(pred, ['setosa', 'versicolor', 'virginica'], "Prediction not in expected classes.")
 
 if __name__ == '__main__':
     unittest.main()
