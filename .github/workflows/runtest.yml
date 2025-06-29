@@ -16,7 +16,7 @@ jobs:
       - name: run unit tests
         run: |
           pip install -r requirements.txt
-          python -m test 2>&1 > test_output.txt
+          python -m test > test_output.txt 2>&1
       - name: Create CML report
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
