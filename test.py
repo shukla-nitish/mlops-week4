@@ -37,7 +37,7 @@ class TestIrisModel(unittest.TestCase):
 
     def test_single_prediction(self):
         """Test that the model predicts a known class for a sample."""
-        sample = self.X.iloc[0].to_numpy().reshape(1, -1)
+        sample = self.X.iloc[[0]]
         pred = self.model.predict(sample)[0]
         self.assertIn(pred, ['setosa', 'versicolor', 'virginica'], "Prediction not in expected classes.")
 
