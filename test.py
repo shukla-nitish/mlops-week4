@@ -1,20 +1,19 @@
 import unittest
-import numpy as np
 from sklearn.metrics import accuracy_score
 
 
 class TestIrisModel(unittest.TestCase):
-    self.model = None
-    self.model_path = 'model.joblib'
-    self.X = None
-    self.y = None
-    self.sample_path = "samples"
+    model = None
+    model_path = 'model.joblib'
+    X = None
+    y = None
+    sample_path = "samples"
     
     def setUp(self):
         from joblib import load
         import pandas as pd
         self.model = load(self.model_path)
-        data = pd.read_csv(sample_path + "/sample.csv")
+        data = pd.read_csv(self.sample_path + "/sample.csv")
         self.X = data.iloc[:,:4]
         self.y = data.iloc[:,4]
 
@@ -24,6 +23,7 @@ class TestIrisModel(unittest.TestCase):
         self.assertEqual(self.X.shape[1],  4, "Feature matrix shape mismatch.")
 
     def test_label_values(self):
+        import numpy as np
         """Check that all labels are among expected values."""
         unique_labels = np.unique(self.y)
         self.assertTrue(np.all(np.isin(unique_labels, ['setosa', 'versicolor', 'virginica'])), "Unexpected label values.")
@@ -37,7 +37,7 @@ class TestIrisModel(unittest.TestCase):
 
     def test_single_prediction(self):
         """Test that the model predicts a known class for a sample."""
-        sample = self.X[0].reshape(1, -1)
+        sample = self.X.iloc[0].to_numpy().reshape(1, -1)
         pred = self.model.predict(sample)[0]
         self.assertIn(pred, ['setosa', 'versicolor', 'virginica'], "Prediction not in expected classes.")
 
